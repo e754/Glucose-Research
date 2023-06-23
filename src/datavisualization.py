@@ -10,7 +10,7 @@ Original file is located at
 import pandas as pd
 from google.colab import drive
 drive.mount('/content/drive')
-data = pd.read_csv("/content/drive/MyDrive/Glucose studies/preparedData.csv")
+data = pd.read_csv("/content/drive/MyDrive/Glucose-Research/preparedData.csv")
 
 # Commented out IPython magic to ensure Python compatibility.
 import pandas as pd
