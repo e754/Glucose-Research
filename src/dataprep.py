@@ -11,9 +11,9 @@ import pandas as pd
 
 from google.colab import drive
 drive.mount('/content/drive')
-df_glucose = pd.read_csv("/content/drive/MyDrive/Glucose studies/glucose_insulin_ICU.csv")
-df_demographic=pd.read_csv("/content/drive/MyDrive/Glucose studies/ADMISSIONS.csv")
-df_patients=pd.read_csv("/content/drive/MyDrive/Glucose studies/PATIENTS.csv")
+df_glucose = pd.read_csv("/content/drive/MyDrive/Glucose-Research/glucose_insulin_ICU.csv")
+df_demographic=pd.read_csv("/content/drive/MyDrive/Glucose-Research/ADMISSIONS.csv")
+df_patients=pd.read_csv("/content/drive/MyDrive/Glucose-Research/PATIENTS.csv")
 
 df_diag = pd.read_csv("/content/drive/MyDrive/Glucose studies/DIAGNOSES_ICD.csv")
 septic_diag=['67020','67022','67024','77181','11403','99592','67030','67032','67034','31','545','380','3810','3811','3812','3819','382','383','3840','3841','3842','3843','3844','3849','388','389','202','223','449','41512','42292','65930','65931','65933','77181','99591','99592','99802','78552']
