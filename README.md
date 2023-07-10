@@ -18,3 +18,5 @@ run models? whichs scripts?
 MIMIC data can be found in PhysioNet, a repository of freely-available medical research data, managed by the MIT Laboratory for Computational Physiology. Due to its sensitive nature, credentialing is required to access both datasets.
 
 Documentation for MIMIC-IV's can be found here: https://mimic.mit.edu/
+
+.
