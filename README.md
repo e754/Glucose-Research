@@ -6,3 +6,11 @@ The selected cohort are patients experiencing sepsis, older than 18 years old, w
 
 
 In the datavisualization.py file, a tableOne is created using the tableone package in python, it shows demographic data such as age, gender, and then mean glucose measurment amount/frequency by days, all groups by ethnicity.
+
+
+# Getting Access to Data 
+
+MIMIC data can be found in PhysioNet, a repository of freely-available medical research data, managed by the MIT Laboratory for Computational Physiology. Due to its sensitive nature, credentialing is required to access both datasets.
+
+Documentation for MIMIC-IV's can be found here: https://mimic.mit.edu/
+
