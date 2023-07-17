@@ -16,7 +16,7 @@ CREATE OR REPLACE TABLE `glucosedatabyicu.mergingFiltering.14_revisedtotalgluc` 
         hadm_id
     ) a
     JOIN
-      `glucosedatabyicu.mergingFiltering.11_otherGluBool` d
+      `glucosedatabyicu.mergingFiltering.comb` d
     ON
       d.hadm_id = a.hadm_id
   ) a
