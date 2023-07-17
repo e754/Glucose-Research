@@ -1,4 +1,4 @@
-
+-- Run first
 with aux as (
 SELECT 
     subject_id
