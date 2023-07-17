@@ -1,4 +1,4 @@
--- Run first
+Create table `glucosedatabyicu.mergingFiltering.comb` as
 with aux as (
 SELECT 
     subject_id
@@ -219,7 +219,6 @@ ON adm_dx.hadm_id = icu.hadm_id
 
 )
 
-
 SELECT 
   icuStay.*, 
   adm.race,
@@ -329,9 +328,6 @@ LEFT JOIN (
   GROUP BY stay_id
 ) as measu
 ON icuStay.stay_id = measu.stay_id
-
-
-
 
 
 
