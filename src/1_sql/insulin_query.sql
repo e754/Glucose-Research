@@ -1,28 +1,25 @@
-CREATE OR REPLACE TABLE `glucosedatabyicu.mergingFiltering.17_tobeused` AS (
-  SELECT
+CREATE OR REPLACE TABLE `glucosedatabyicu.mergingFiltering.14_revisedtotalgluc` AS (
+SELECT
   a.*,
-  IFNULL(CAST(total_insulin_measurements AS FLOAT64) / los, NULL) AS totalinsulin_perLOS
+  IFNULL(CAST(total_glucose_measurements AS FLOAT64) / los, NULL) AS totalgluc_perLOS
 FROM (
   SELECT
     d.*,
-    a.total_insulin_measurements
+    a.total_glucose_measurements
   FROM (
     SELECT
       stay_id,
-      SUM(valuenum) AS total_insulin_measurements
+      COUNT(*) AS total_glucose_measurements
     FROM
-      glucosedatabyicu.measurmentTaken.onlyGlucose
+      `glucose-390717.glucose1.actual_input_all`
     GROUP BY
       stay_id
   ) a
   RIGHT JOIN
-    `glucosedatabyicu.mergingFiltering.14_revisedtotalgluc` d
+    `glucosedatabyicu.mergingFiltering.comb` d
   ON
     d.stay_id = a.stay_id
 ) a
 ORDER BY
   a.subject_id
 )
-
-
-  
