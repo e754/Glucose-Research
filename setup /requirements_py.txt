@@ -1,0 +1,10 @@
+google-cloud-bigquery==2.34.3
+python-dotenv
+pyarrow==10.0.0
+numpy==1.23.1
+tqdm==4.65.0
+pandas==2.0.1
+tableone==0.8.0
+xgboost==1.7.5
+shap
+joblib==1.2.0
