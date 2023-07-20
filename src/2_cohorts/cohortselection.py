@@ -40,7 +40,6 @@ print(f"After removing those who stayed less than 1 day:{len(race)}")
 from google.colab import files
 
 # Save DataFrame to a CSV file
-race.to_csv('cohortedData.csv', index=False)
+race.to_csv('data/cohortedData.csv', index=False)
 
 # Download the CSV file
-files.download('cohortedData.csv')
