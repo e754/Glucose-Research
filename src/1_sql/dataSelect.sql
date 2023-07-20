@@ -1,4 +1,3 @@
-Create table `glucosedatabyicu.mergingFiltering.comb` as
 with aux as (
 SELECT 
     subject_id
