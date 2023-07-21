@@ -10,7 +10,7 @@ Documentation for MIMIC-IV's can be found here: https://mimic.mit.edu/
 
 # How to get data
 
-### 3. Get the Data!
+### 1. Get the Data!
 
 Both MIMIC and eICU data can be found in [PhysioNet](https://physionet.org/), a repository of freely-available medical research data, managed by the MIT Laboratory for Computational Physiology. Due to its sensitive nature, credentialing is required to access both datasets.
 
@@ -43,3 +43,5 @@ Having all the necessary tables for the cohort generation query in your project,
 ```shell
 python3 src/2_cohorts/1_get_data.py --sql "src/1_sql/dataSelect.sql" --destination "data/MIMIC.csv"
 ```
+### 2. Run cohorting!
+```python3 src/2_cohorts/cohortselection.py```
