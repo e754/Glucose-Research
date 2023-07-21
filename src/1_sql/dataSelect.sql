@@ -15,8 +15,6 @@ SELECT
   )
   AS conv
   ON conv.icd9 = dx.icd_code
-
-
 ),
 piv as (
 SELECT DISTINCT
@@ -216,8 +214,8 @@ GROUP BY hadm_id
 AS adm_dx 
 ON adm_dx.hadm_id = icu.hadm_id
 
-)
-
+),
+comb as (
 SELECT 
   icuStay.*, 
   adm.race,
@@ -327,6 +325,46 @@ LEFT JOIN (
   GROUP BY stay_id
 ) as measu
 ON icuStay.stay_id = measu.stay_id
-
-
-
+),
+gluInclu as (SELECT
+  a.*,
+  IFNULL(CAST(total_glucose_measurements AS FLOAT64) / los, NULL) AS totalgluc_perLOS
+FROM (
+   SELECT
+    d.*,
+    a.total_glucose_measurements
+  FROM (
+    SELECT
+      stay_id,
+      COUNT(*) AS total_glucose_measurements
+    FROM
+      `physionet-data.mimiciv_icu.inputevents` where itemid IN (229299, 229619, 223257,223258,223259,223260,223261,223262)
+    GROUP BY
+      stay_id
+  ) a
+   JOIN
+     comb d
+  ON
+    d.stay_id = a.stay_id
+) a
+ORDER BY
+  a.subject_id
+)
+SELECT
+  d.*,
+  a1.lactate_max,
+  a1.ph_min,
+  a1.po2_min,
+  a2.spo2_mean,
+  a2.resp_rate_mean,
+  a2.heart_rate_mean,
+  a2.temperature_mean,
+  a2.mbp_mean
+FROM
+  comb d
+JOIN
+  `physionet-data.mimiciv_derived.first_day_bg` a1
+ON  d.stay_id = a1.stay_id
+JOIN
+  `physionet-data.mimiciv_derived.first_day_vitalsign` a2
+ON  d.stay_id = a2.stay_id
