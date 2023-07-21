@@ -294,8 +294,7 @@ LEFT JOIN (
       SELECT t1.*, t2.intime
       FROM (
         SELECT *
-        FROM `physionet-data.mimiciv_icu.inputevents`
-        WHERE itemid IN (229299, 229619, 223257, 223258, 223259, 223260, 223261, 223262)
+        FROM `glucosedatabyicu.events.onlyInsulin`
       ) t1
       JOIN `physionet-data.mimiciv_icu.icustays` t2 ON t1.stay_id = t2.stay_id
     )
@@ -316,8 +315,7 @@ LEFT JOIN (
       SELECT t1.*, t2.intime
       FROM (
         SELECT *
-        FROM `physionet-data.mimiciv_icu.chartevents`
-        where itemid IN (220621, 228388, 225664,226537)
+        FROM `glucosedatabyicu.events.onlyGlucose`
       ) t1
       JOIN `physionet-data.mimiciv_icu.icustays` t2 ON t1.stay_id = t2.stay_id
     )
@@ -338,7 +336,7 @@ FROM (
       stay_id,
       COUNT(*) AS total_glucose_measurements
     FROM
-      `physionet-data.mimiciv_icu.inputevents` where itemid IN (229299, 229619, 223257,223258,223259,223260,223261,223262)
+      `glucosedatabyicu.events.onlyGlucose`
     GROUP BY
       stay_id
   ) a
