@@ -46,26 +46,6 @@ df['mbp_mean'] = df['mbp_mean'].apply(lambda x: 0 if x < 0 else x)
 df['mbp_mean'] = df['mbp_mean'].apply(lambda x: 0 if x > 200 else x)
 df['mbp_mean'] = df['mbp_mean'].apply(lambda x: 85 if x == 0 or pd.isna(x) else x)
 
-# Temperature
-# Convert 'temperature_mean' column to numeric type (ignoring errors)
-df['temperature_mean'] = pd.to_numeric(df['temperature_mean'], errors='coerce')
-
-# Apply transformations
-def temperature_transformation(x):
-    if pd.isna(x) or x == 0:
-        return 36.5
-    elif isinstance(x, (int, float)):
-        if x < 32:
-            return 0
-        elif x > 45:
-            return 0
-        else:
-            return x
-    else:
-        return x
-
-df['temperature_mean'] = df['temperature_mean'].apply(temperature_transformation)
-
 # Save DataFrame to a CSV file
 df.to_csv('data/cohortedData.csv', index=False)
 
