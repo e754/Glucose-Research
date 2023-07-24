@@ -347,7 +347,22 @@ FROM (
 ) a
 ORDER BY
   a.subject_id
-)
+),
+insulinAmount AS (
+  SELECT
+    stay_id,
+    SUM(amount) AS total_insulin_amount
+  FROM `glucosedatabyicu.events.onlyInsulin` 
+  GROUP BY stay_id
+),
+insulinWeight AS (
+  SELECT
+    stay_id,
+  AVG(patientweight) AS avg_weight
+  FROM `glucosedatabyicu.events.onlyInsulin` 
+  GROUP BY stay_id
+),
+revised as (
 SELECT
   d.*,
   a1.lactate_max,
@@ -358,6 +373,7 @@ SELECT
   a2.heart_rate_mean,
   a2.temperature_mean,
   a2.mbp_mean
+  
 FROM
   comb d
 JOIN
@@ -366,3 +382,19 @@ ON  d.stay_id = a1.stay_id
 JOIN
   `physionet-data.mimiciv_derived.first_day_vitalsign` a2
 ON  d.stay_id = a2.stay_id
+)
+SELECT
+  a.*,
+  IFNULL(CAST(total_insulin_amount AS FLOAT64) / los, NULL) AS totalinsulin_perLOS,
+  b.avg_weight
+FROM (
+  SELECT
+    d.*,
+    a.total_insulin_amount
+  FROM insulinAmount a
+  RIGHT JOIN revised d
+  ON d.stay_id = a.stay_id
+) a
+LEFT JOIN insulinWeight b
+ON a.stay_id = b.stay_id
+ORDER BY a.subject_id
