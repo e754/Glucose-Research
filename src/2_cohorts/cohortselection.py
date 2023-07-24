@@ -67,6 +67,6 @@ def temperature_transformation(x):
 df['temperature_mean'] = df['temperature_mean'].apply(temperature_transformation)
 
 # Save DataFrame to a CSV file
-race.to_csv('data/cohortedData.csv', index=False)
+df.to_csv('data/cohortedData.csv', index=False)
 
 # Download the CSV file
