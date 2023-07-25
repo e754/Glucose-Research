@@ -17,19 +17,21 @@ from imblearn.over_sampling import SMOTE
 import numpy as np
 
 from google.colab import drive
-drive.mount('/content/drive')
 from sklearn.preprocessing import LabelEncoder
-label_encoder = LabelEncoder()
-
 import pandas as pd
-data = pd.read_csv('/content/drive/MyDrive/GlucoseData/Regression models/mimicIVLogisticGlucoseData.csv')
+import os
+current_path = os.path.abspath('.')
+label_encoder = LabelEncoder()
+fi=os.path.abspath('../../data/cohortedData.csv')
+print(fi)
+data = pd.read_csv(fi)
 
-data['race'] = data['race'].replace('OTHER', 'Other')
-data=data[data['race']!='Other']
-blackweight=len(data[data['race']=='Black'])/len(data)
-whiteweight=len(data[data['race']=='White'])/len(data)
-asianweight=len(data[data['race']=='Asian'])/len(data)
-hispanicweight=len(data[data['race']=='Hispanic'])/len(data)
+data['race_group'] = data['race_group'].replace('OTHER', 'Other')
+data=data[data['race_group']!='Other']
+blackweight=len(data[data['race_group']=='Black'])/len(data)
+whiteweight=len(data[data['race_group']=='White'])/len(data)
+asianweight=len(data[data['race_group']=='Asian'])/len(data)
+hispanicweight=len(data[data['race_group']=='Hispanic'])/len(data)
 
 len(data)
 
@@ -53,7 +55,7 @@ data['hadMeasurmentDayOne'] = label_encoder.fit_transform(data['hadMeasurmentDay
 
 niceColumns=["uti", "biliary", "skin", 'hypertension_present','heart_failure_present','copd_present','cad_present','diabetes_with_cc','diabetes_without_cc']
 
-categorical_vars = ['anchor_year_group', 'race','diabetes_types','cardiovascular','cns','coagulation','liver','renal','respiration']
+categorical_vars = ['anchor_year_group', 'race_group','diabetes_types','cardiovascular','cns','coagulation','liver','renal','respiration']
 dummy_vars = pd.get_dummies(data[categorical_vars])
 dummy_vars = dummy_vars.drop(columns=['anchor_year_group_2008 - 2010'])
 dummy_vars = dummy_vars.drop(columns=['diabetes_types_none'])
@@ -63,7 +65,7 @@ dummy_vars = dummy_vars.drop(columns=['coagulation_none'])
 dummy_vars = dummy_vars.drop(columns=['liver_none'])
 dummy_vars = dummy_vars.drop(columns=['renal_none'])
 dummy_vars = dummy_vars.drop(columns=['respiration_none'])
-dummy_vars = dummy_vars.drop(columns=['race_White'])
+dummy_vars = dummy_vars.drop(columns=['race_group_White'])
 
 
 
@@ -83,9 +85,9 @@ dependent = data['hadMeasurmentDayOne']
 from tableone import TableOne, load_dataset
 import pandas as pd
 
-columns = ['charlson_comorbidity_index', 'los', 'race','anchor_year_group','hadInsulinDayOne','hadMeasurmentDayOne','cardiovascular','cns','coagulation','liver','renal','respiration']
+columns = ['charlson_comorbidity_index', 'los', 'race_group','anchor_year_group','hadInsulinDayOne','hadMeasurmentDayOne','cardiovascular','cns','coagulation','liver','renal','respiration']
 cat=['anchor_year_group','hadInsulinDayOne','hadMeasurmentDayOne','cardiovascular','cns','coagulation','liver','renal','respiration']
-groupby = ['race']
+groupby = ['race_group']
 mytable = TableOne(data, columns=columns, categorical=cat, groupby=groupby,  pval=False)
 print(mytable.tabulate(tablefmt = "fancy_grid"))
 
@@ -151,10 +153,10 @@ result.summary()
 
 merged_df = pd.concat([independent, dependent], axis=1)
 
-asian=merged_df[merged_df['race_Asian']==1]
-black=merged_df[merged_df['race_Black']==1]
-white = merged_df[(merged_df['race_Asian'] == 0) & (merged_df['race_Black'] == 0) & (merged_df['race_Hispanic'] == 0)]
-hispanic=merged_df[merged_df['race_Hispanic']==1]
+asian=merged_df[merged_df['race_group_Asian']==1]
+black=merged_df[merged_df['race_group_Black']==1]
+white = merged_df[(merged_df['race_group_Asian'] == 0) & (merged_df['race_Black'] == 0) & (merged_df['race_Hispanic'] == 0)]
+hispanic=merged_df[merged_df['race_group_Hispanic']==1]
 
 random_seed = 42
 pd.np.random.seed(random_seed)
