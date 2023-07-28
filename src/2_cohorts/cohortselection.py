@@ -4,8 +4,6 @@ import numpy as np
 df = pd.read_csv("data/MIMIC.csv")
 
 
-df.head()
-
 ageTrim=df[df['age']>18]
 print(f"After removing those 18 or younger: {len(ageTrim)}")
 
@@ -19,6 +17,8 @@ df=losTrim[losTrim['race_group']!='OTHER']
 df=df[df['race_group']!='Other']
 print(f"After removing those who stayed less than 1 day:{len(df)}")
 
+
+# Data cleaning, removing inplausible values
 df['totalinsulin_perLOS'] = df['totalinsulin_perLOS'].apply(lambda x: 300 if x > 300 else x)
 
 # po2 range
@@ -49,4 +49,3 @@ df['mbp_mean'] = df['mbp_mean'].apply(lambda x: 85 if x == 0 or pd.isna(x) else 
 # Save DataFrame to a CSV file
 df.to_csv('data/cohortedData.csv', index=False)
 
-# Download the CSV file
