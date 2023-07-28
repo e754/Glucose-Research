@@ -398,3 +398,5 @@ FROM (
 LEFT JOIN insulinWeight b
 ON a.stay_id = b.stay_id
 ORDER BY a.subject_id
+  
+
