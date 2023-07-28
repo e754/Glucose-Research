@@ -8,3 +8,5 @@ tableone==0.8.0
 xgboost==1.7.5
 shap
 joblib==1.2.0
+statsmodels=0.14.0
+sklearn=1.3.0 
