@@ -15,8 +15,9 @@ SELECT
   )
   AS conv
   ON conv.icd9 = dx.icd_code
-),
-piv as (
+)
+    
+, piv as (
 SELECT DISTINCT
     icu.hadm_id,
     adm_dx.pneumonia, adm_dx.uti, adm_dx.biliary, adm_dx.skin,
@@ -214,12 +215,14 @@ GROUP BY hadm_id
 AS adm_dx 
 ON adm_dx.hadm_id = icu.hadm_id
 
-),
-comb as (
+)
+
+, comb as (
 SELECT 
   icuStay.*, 
   adm.race,
-  adm.language,CASE WHEN adm.admission_type = 'ELECTIVE' THEN 'true' ELSE 'false' END AS `admElective`,
+  adm.language,
+  CASE WHEN adm.admission_type = 'ELECTIVE' THEN 'true' ELSE 'false' END AS `admElective`,
   age.age,
   patients.gender, patients.anchor_year_group,
   sep.sepsis3,
@@ -311,6 +314,9 @@ LEFT JOIN (
   FROM (
     SELECT *,
     TIMESTAMP_DIFF(CAST(charttime AS TIMESTAMP), CAST(intime AS TIMESTAMP), DAY) AS daysinceStart
+    -- tristan just do one from if possible
+    -- tristan also do it directly from a physionet table if possible
+    
     FROM (
       SELECT t1.*, t2.intime
       FROM (
@@ -323,10 +329,13 @@ LEFT JOIN (
   GROUP BY stay_id
 ) as measu
 ON icuStay.stay_id = measu.stay_id
-),
-gluInclu as (SELECT
+)
+    
+, gluInclu as (SELECT
   a.*,
   IFNULL(CAST(total_glucose_measurements AS FLOAT64) / los, NULL) AS totalgluc_perLOS
+    -- tristan just do one from if possible
+    -- tristan also do it directly from a physionet table if possible
 FROM (
    SELECT
     d.*,
@@ -347,8 +356,11 @@ FROM (
 ) a
 ORDER BY
   a.subject_id
-),
-insulinAmount AS (
+)
+    
+     -- tristan just do one from if possible
+    -- tristan also do it directly from a physionet table if possible   
+,insulinAmount AS (
   SELECT
     stay_id,
     SUM(amount) AS total_insulin_amount
@@ -374,15 +386,17 @@ SELECT
   a2.temperature_mean,
   a2.mbp_mean
   
-FROM
-  comb d
-JOIN
+FROM comb d
+
+LEFT JOIN
   `physionet-data.mimiciv_derived.first_day_bg` a1
 ON  d.stay_id = a1.stay_id
-JOIN
+
+LEFT JOIN
   `physionet-data.mimiciv_derived.first_day_vitalsign` a2
 ON  d.stay_id = a2.stay_id
 )
+    
 SELECT
   a.*,
   IFNULL(CAST(total_insulin_amount AS FLOAT64) / los, NULL) AS totalinsulin_perLOS,
@@ -391,8 +405,12 @@ FROM (
   SELECT
     d.*,
     a.total_insulin_amount
-  FROM insulinAmount a
-  RIGHT JOIN revised d
+      -- tristan just do one from if possible
+    -- tristan also do it directly from a physionet table if possible
+    -- tristan solve this in a with temporary table above just do the left join here like you do with vitalsigns
+    
+    FROM insulinAmount a
+    RIGHT JOIN revised d
   ON d.stay_id = a.stay_id
 ) a
 LEFT JOIN insulinWeight b
