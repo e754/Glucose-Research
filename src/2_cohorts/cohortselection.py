@@ -46,6 +46,11 @@ df['mbp_mean'] = df['mbp_mean'].apply(lambda x: 0 if x < 0 else x)
 df['mbp_mean'] = df['mbp_mean'].apply(lambda x: 0 if x > 200 else x)
 df['mbp_mean'] = df['mbp_mean'].apply(lambda x: 85 if x == 0 or pd.isna(x) else x)
 
+#cleansing temperature_mean
+df['temperature_mean'] = df['temperature_mean'].apply(lambda x: 0 if x < 32 else x)
+df['temperature_mean'] = df['temperature_mean'].apply(lambda x: 0 if x > 45 else x)
+df['temperature_mean'] = df['temperature_mean'].apply(lambda x: 36.5 if x == 0 or pd.isna(x) else x)
+
 #fill in NA
 df.fillna(0, inplace=True)
 
