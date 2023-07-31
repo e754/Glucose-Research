@@ -1,21 +1,35 @@
 import pandas as pd
 import os
 import numpy as np
+
+def get_demo(a):
+    print(f"black removed: {len(a[a['race_group']=='Black'])}")
+    print(f"asian removed: {len(a[a['race_group']=='Asian'])}")
+    print(f"white removed: {len(a[a['race_group']=='White'])}")
+    print(f"Hispanic removed: {len(a[a['race_group']=='Asian'])}")
+    print(f"Other race groups removed: {len(a[a['race_group']=='Other'])}")
 df = pd.read_csv("data/MIMIC.csv")
 
 
 ageTrim=df[df['age']>18]
+removed=df[df['age']<=18]
 print(f"After removing those 18 or younger: {len(ageTrim)}")
+get_demo(removed)
 
+removed=ageTrim[ageTrim['sepsis3']!=0]
 sepTrim=ageTrim[ageTrim['sepsis3']==1]
 print(f"After removing those without sepsis:{len(sepTrim)}")
+get_demo(removed)
 
 losTrim=sepTrim[sepTrim['los']>1]
+removed=sepTrim[sepTrim['los']<=1]
 print(f"After removing those who stayed less than 1 day:{len(losTrim)}")
+get_demo(removed)
 
-df=losTrim[losTrim['race_group']!='OTHER']
-df=df[df['race_group']!='Other']
+df=losTrim[losTrim['race_group']!='Other']
+removed=losTrim[losTrim['race_group']=='Other']
 print(f"After removing those who stayed less than 1 day:{len(df)}")
+get_demo(removed)
 
 
 # Data cleaning, removing inplausible values
