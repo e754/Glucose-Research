@@ -10,10 +10,13 @@ Original file is located at
 from google.colab import drive
 drive.mount('/content/drive')
 from sklearn.preprocessing import LabelEncoder
-label_encoder = LabelEncoder()
 
 import pandas as pd
-data = pd.read_csv('/content/drive/MyDrive/GlucoseData/Regression models/cohortedData.csv')
+current_path = os.path.abspath('.')
+label_encoder = LabelEncoder()
+fi=os.path.abspath('../../data/cohortedData.csv')
+print(fi)
+data = pd.read_csv(fi)
 
 !pip install tableone
 from tableone import TableOne, load_dataset
