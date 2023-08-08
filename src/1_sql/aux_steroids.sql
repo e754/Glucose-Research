@@ -1,6 +1,6 @@
 
 
-CREATE OR REPLACE TABLE glucosedatabyicu.myMIMIC.aux_steroids AS
+CREATE OR REPLACE TABLE XXXXX.my_MIMIC.aux_steroids AS
 
 WITH aux_steroid AS (
   SELECT
@@ -76,6 +76,7 @@ WITH aux_steroid AS (
   'Restarted'
   )
   AND detail.dose_given <> "_"
+  AND detail.dose_given <> "___"
   AND TIMESTAMP_DIFF(icu_outtime, charttime, HOUR) > 0
   AND TIMESTAMP_DIFF(charttime, icu_intime, HOUR) > 0
 
