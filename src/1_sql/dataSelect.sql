@@ -252,6 +252,8 @@ SELECT
   piv.ckd_stages,
   piv.diabetes_types,
   piv.connective_disease,
+  ster.methylprednisolone_equivalent_total,
+  ster.methylprednisolone_equivalent_normalized_by_icu_los
 
   CASE 
     WHEN adm.race LIKE '%HISPANIC%' THEN 'Hispanic'
@@ -286,6 +288,9 @@ ON icuStay.hadm_id = cc.hadm_id
 
 LEFT JOIN piv piv
 ON icuStay.hadm_id = piv.hadm_id
+
+LEFT JOIN 'glucose-390717.my_MIMIC.aux_steroids' ster 
+ON icuStay.hadm_id = ster.hadm_id
 
 LEFT JOIN (
   SELECT
