@@ -254,6 +254,8 @@ SELECT
   piv.connective_disease,
   ster.methylprednisolone_equivalent_total,
   ster.methylprednisolone_equivalent_normalized_by_icu_los
+  CASE WHEN ster.methylprednisolone_equivalent_total > 0 THEN '1' ELSE '0' END AS `hadSteroid`,
+
 
   CASE 
     WHEN adm.race LIKE '%HISPANIC%' THEN 'Hispanic'
