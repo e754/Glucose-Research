@@ -3,11 +3,12 @@ import os
 import numpy as np
 
 def get_demo(a):
-    print(f"black removed: {len(a[a['race_group']=='Black'])}")
-    print(f"asian removed: {len(a[a['race_group']=='Asian'])}")
-    print(f"white removed: {len(a[a['race_group']=='White'])}")
-    print(f"Hispanic removed: {len(a[a['race_group']=='Asian'])}")
-    print(f"Other race groups removed: {len(a[a['race_group']=='Other'])}")
+    print(f"black : {100*len(a[a['race_group']=='Black'])/len(a)}%")
+    print(f"asian : {100*len(a[a['race_group']=='Asian'])/len(a)}%")
+    print(f"white : {100*len(a[a['race_group']=='White'])/len(a)}%")
+    print(f"Hispanic : {100*len(a[a['race_group']=='Asian'])/len(a)}%")
+    print(f"Other race groups : {100*len(a[a['race_group']=='Other'])/len(a)}%")
+    print(f"Females : {100*len(a[a['gender']=='F'])/len(a)}%")
 df = pd.read_csv("data/MIMIC.csv")
 
 df['isMale'] = 0
@@ -35,26 +36,28 @@ def otherRace(race):
       return race
 df['race_group']=df['race_group'].apply(otherRace)
 
+get_demo(df)
+
 ageTrim=df[df['age']>18]
 removed=df[df['age']<=18]
 print(f"After removing those 18 or younger: {len(ageTrim)}")
-get_demo(removed)
+get_demo(ageTrim)
 
 removed=ageTrim[ageTrim['sepsis3']!=0]
 sepTrim=ageTrim[ageTrim['sepsis3']==1]
 print(f"After removing those without sepsis:{len(sepTrim)}")
-get_demo(removed)
+get_demo(sepTrim)
 
 losTrim=sepTrim[sepTrim['los']>1]
 removed=sepTrim[sepTrim['los']<=1]
 print(f"After removing those who stayed less than 1 day:{len(losTrim)}")
-get_demo(removed)
+get_demo(losTrim)
 
 df=losTrim[losTrim['race_group']!='Other']
 df=losTrim[losTrim['race_group']!='Other']
 removed=losTrim[losTrim['race_group']=='Other']
 print(f"After removing those who stayed less than 1 day:{len(df)}")
-get_demo(removed)
+get_demo(df)
 
 
 # Data cleaning, removing inplausible values
@@ -93,4 +96,4 @@ df['temperature_mean'] = df['temperature_mean'].apply(lambda x: 36.5 if x == 0 o
 #fill in NA
 
 # Save DataFrame to a CSV file
-df.to_csv('data/cohortedData.csv', index=False)
+df.to_csv('data/cohortedData.csv', index=False) 
