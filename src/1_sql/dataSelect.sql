@@ -225,6 +225,7 @@ SELECT
   icuStay.*, 
   adm.race,
   adm.language,CASE WHEN adm.admission_type = 'ELECTIVE' THEN 'true' ELSE 'false' END AS `admElective`,
+  adm.insurance,
   age.age,
   patients.gender, patients.anchor_year_group,
   sep.sepsis3,
@@ -253,8 +254,8 @@ SELECT
   piv.diabetes_types,
   piv.connective_disease,
   ster.methylprednisolone_equivalent_total,
-  ster.methylprednisolone_equivalent_normalized_by_icu_los
-  CASE WHEN ster.methylprednisolone_equivalent_total > 0 THEN '1' ELSE '0' END AS `hadSteroid`,
+  ster.methylprednisolone_equivalent_normalized_by_icu_los,
+  CASE WHEN ster.methylprednisolone_equivalent_total > 0 THEN 1 ELSE 0 END AS `hadSteroid`,
 
 
   CASE 
@@ -291,7 +292,7 @@ ON icuStay.hadm_id = cc.hadm_id
 LEFT JOIN piv piv
 ON icuStay.hadm_id = piv.hadm_id
 
-LEFT JOIN 'glucose-390717.my_MIMIC.aux_steroids' ster 
+LEFT JOIN `glucosedatabyicu.my_MIMIC.aux_steroids` ster 
 ON icuStay.hadm_id = ster.hadm_id
 
 LEFT JOIN (
