@@ -313,7 +313,7 @@ ON icuStay.hadm_id = piv.hadm_id
 LEFT JOIN surgflag surgflag
 ON surgflag.stay_id = icuStay.stay_id
 
-LEFT JOIN `glucosedatabyicu.my_MIMIC.aux_steroids` ster 
+LEFT JOIN `physionet-data.my_MIMIC.aux_steroids` ster 
 ON icuStay.hadm_id = ster.hadm_id
 
 LEFT JOIN (
@@ -433,4 +433,3 @@ LEFT JOIN insulinWeight b
 ON a.stay_id = b.stay_id
 ORDER BY a.subject_id
   
-
