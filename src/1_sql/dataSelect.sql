@@ -271,6 +271,9 @@ SELECT
   piv.ckd_stages,
   piv.diabetes_types,
   piv.connective_disease,
+  ster.methylprednisolone_equivalent_total,
+  ster.methylprednisolone_equivalent_normalized_by_icu_los,
+  CASE WHEN ster.methylprednisolone_equivalent_total > 0 THEN 1 ELSE 0 END AS `hadSteroid`,
   surgflag.major_surgery,
 
   CASE 
@@ -309,6 +312,9 @@ ON icuStay.hadm_id = piv.hadm_id
 
 LEFT JOIN surgflag surgflag
 ON surgflag.stay_id = icuStay.stay_id
+
+LEFT JOIN `glucosedatabyicu.my_MIMIC.aux_steroids` ster 
+ON icuStay.hadm_id = ster.hadm_id
 
 LEFT JOIN (
   SELECT
