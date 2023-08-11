@@ -244,6 +244,7 @@ SELECT
   icuStay.*, 
   adm.race,
   adm.language,CASE WHEN adm.admission_type = 'ELECTIVE' THEN 'true' ELSE 'false' END AS `admElective`,
+  adm.insurance,
   age.age,
   patients.gender, patients.anchor_year_group,
   sep.sepsis3,
