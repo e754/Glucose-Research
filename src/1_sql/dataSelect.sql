@@ -16,6 +16,25 @@ SELECT
   AS conv
   ON conv.icd9 = dx.icd_code
 ),
+surgflag as (
+  SELECT ie.stay_id
+    , MAX(CASE
+        WHEN LOWER(curr_service) LIKE '%surg%' THEN 1
+        WHEN curr_service = 'ORTHO' THEN 1
+        ELSE 0 END) AS major_surgery
+      
+      , MAX(CASE
+          WHEN first_careunit LIKE  "%SICU%" AND
+          first_careunit NOT LIKE "%MICU/SICU%"  THEN 1
+          ELSE 0 END) AS surgical_icu
+
+  FROM `physionet-data.mimiciv_icu.icustays` ie
+
+  LEFT JOIN `physionet-data.mimiciv_hosp.services`se
+      ON ie.hadm_id = se.hadm_id
+      AND se.transfertime < DATETIME_ADD(ie.intime, INTERVAL '2' DAY)
+  GROUP BY ie.stay_id
+),
 piv as (
 SELECT DISTINCT
     icu.hadm_id,
@@ -225,7 +244,6 @@ SELECT
   icuStay.*, 
   adm.race,
   adm.language,CASE WHEN adm.admission_type = 'ELECTIVE' THEN 'true' ELSE 'false' END AS `admElective`,
-  adm.insurance,
   age.age,
   patients.gender, patients.anchor_year_group,
   sep.sepsis3,
@@ -253,10 +271,7 @@ SELECT
   piv.ckd_stages,
   piv.diabetes_types,
   piv.connective_disease,
-  ster.methylprednisolone_equivalent_total,
-  ster.methylprednisolone_equivalent_normalized_by_icu_los,
-  CASE WHEN ster.methylprednisolone_equivalent_total > 0 THEN 1 ELSE 0 END AS `hadSteroid`,
-
+  surgflag.major_surgery,
 
   CASE 
     WHEN adm.race LIKE '%HISPANIC%' THEN 'Hispanic'
@@ -292,8 +307,8 @@ ON icuStay.hadm_id = cc.hadm_id
 LEFT JOIN piv piv
 ON icuStay.hadm_id = piv.hadm_id
 
-LEFT JOIN `glucosedatabyicu.my_MIMIC.aux_steroids` ster 
-ON icuStay.hadm_id = ster.hadm_id
+LEFT JOIN surgflag surgflag
+ON surgflag.stay_id = icuStay.stay_id
 
 LEFT JOIN (
   SELECT
@@ -349,7 +364,7 @@ FROM (
       stay_id,
       COUNT(*) AS total_glucose_measurements
     FROM
-      `physionet-data.events.onlyGlucose`
+      `glucosedatabyicu.events.onlyGlucose`
     GROUP BY
       stay_id
   ) a
@@ -411,3 +426,5 @@ FROM (
 LEFT JOIN insulinWeight b
 ON a.stay_id = b.stay_id
 ORDER BY a.subject_id
+  
+
