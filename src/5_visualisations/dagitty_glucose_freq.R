@@ -26,6 +26,7 @@ Vitals [pos="0.582,-1.337"]
 "Anchor Year" -> "Glucose frequency"
 "English Proficiency" -> Demographics
 "Glucose frequency" <-> "Glucose measured"
+"Glucose frequency" <-> Insulin
 "Insurance type" -> Demographics
 "Lab values" -> "Glucose frequency"
 "Lab values" -> SOFA
@@ -42,7 +43,6 @@ Diabetes -> Comorbidities
 Diabetes -> Glucocorticoids
 Fluids -> SOFA
 Glucocorticoids -> "Glucose frequency"
-Insulin -> "Glucose frequency"
 Race -> Demographics
 SOFA -> "Glucose frequency"
 Sex -> Demographics
