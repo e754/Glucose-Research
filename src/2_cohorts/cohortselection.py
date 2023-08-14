@@ -53,10 +53,15 @@ removed=sepTrim[sepTrim['los']<=1]
 print(f"After removing those who stayed less than 1 day:{len(losTrim)}")
 get_demo(losTrim)
 
-df=losTrim[losTrim['race_group']!='Other']
-df=losTrim[losTrim['race_group']!='Other']
-removed=losTrim[losTrim['race_group']=='Other']
-print(f"After removing those who stayed less than 1 day:{len(df)}")
+dka_removed=losTrim[losTrim['dka_present']<1]
+#dka_removed=losTrim[losTrim['los']<=1]
+print(f"After removing those with a DKA diagnosis:{len(dka_removed)}")
+get_demo(dka_removed)
+
+df=dka_removed[dka_removed['race_group']!='Other']
+df=dka_removed[dka_removed['race_group']!='Other']
+removed=dka_removed[dka_removed['race_group']=='Other']
+print(f"After removing those with race "other":{len(df)}")
 get_demo(df)
 
 
