@@ -43,7 +43,7 @@ removed=df[df['age']<=18]
 print(f"After removing those 18 or younger: {len(ageTrim)}")
 get_demo(ageTrim)
 
-removed=ageTrim[ageTrim['sepsis3']!=0]
+removed=ageTrim[ageTrim['sepsis3']!=1]
 sepTrim=ageTrim[ageTrim['sepsis3']==1]
 print(f"After removing those without sepsis:{len(sepTrim)}")
 get_demo(sepTrim)
@@ -53,15 +53,14 @@ removed=sepTrim[sepTrim['los']<=1]
 print(f"After removing those who stayed less than 1 day:{len(losTrim)}")
 get_demo(losTrim)
 
-dka_removed=losTrim[losTrim['dka_present']<1]
-#dka_removed=losTrim[losTrim['los']<=1]
+dka_removed=losTrim[losTrim['dka_present']!=1]
+dka=losTrim[losTrim['dka_present']==1]
 print(f"After removing those with a DKA diagnosis:{len(dka_removed)}")
 get_demo(dka_removed)
 
 df=dka_removed[dka_removed['race_group']!='Other']
-df=dka_removed[dka_removed['race_group']!='Other']
 removed=dka_removed[dka_removed['race_group']=='Other']
-print(f"After removing those with race "other":{len(df)}")
+print(f"After removing those with race other:{len(df)}")
 get_demo(df)
 
 
