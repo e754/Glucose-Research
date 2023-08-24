@@ -282,6 +282,7 @@ SELECT
   piv.ckd_stages,
   piv.diabetes_types,
   piv.connective_disease,
+  piv.dka_present,
   ster.methylprednisolone_equivalent_total,
   ster.methylprednisolone_equivalent_normalized_by_icu_los,
   CASE WHEN ster.methylprednisolone_equivalent_total > 0 THEN 1 ELSE 0 END AS `hadSteroid`,
