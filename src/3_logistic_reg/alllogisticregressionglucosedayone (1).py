@@ -18,18 +18,18 @@ import numpy as np
 import random
 import sklearn
 
-from google.colab import drive
-drive.mount('/content/drive')
 from sklearn.preprocessing import LabelEncoder
-label_encoder = LabelEncoder()
+label_encoder = LabelEncoder() 
+
 
 import pandas as pd
-data = pd.read_csv('/content/drive/MyDrive/GlucoseData/Regression models/cohortedData.csv')
-data.fillna(0, inplace=True)
+import os
+current_path = os.path.abspath('.')
+label_encoder = LabelEncoder()
+fi=os.path.abspath('../../data/cohortedData.csv')
+print(fi)
+data = pd.read_csv(fi)
 
-data.columns
-
-data['major_surgery'].unique()
 
 data['admElective'] = label_encoder.fit_transform(data['admElective'])
 data['hadMeasurmentDayOne'] = label_encoder.fit_transform(data['hadMeasurmentDayOne'])
