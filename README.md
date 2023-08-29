@@ -44,4 +44,4 @@ python3 src/2_cohorts/1_get_data.py --sql "src/1_sql/3_final_dataSelect.sql" --d
 
 ### 2. Create cohort
 
-``python3 src/2_cohorts/cohortselection.py``
+``python3 src/2_cohorts/2_cohort_selection.py``
