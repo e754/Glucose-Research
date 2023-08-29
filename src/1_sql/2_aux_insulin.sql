@@ -1,4 +1,5 @@
-CREATE OR REPLACE TABLE glucosedatabyicu.mergingFiltering.17_tobeused AS (
+CREATE OR REPLACE TABLE `db_name.mergingFiltering.17_tobeused` AS (
+ 
   WITH onlyInsulin AS (
     SELECT *
     FROM evident-zone-390414.mimiciv_icu.inputevents

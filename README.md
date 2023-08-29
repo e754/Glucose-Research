@@ -1,12 +1,10 @@
 # Glucose-Research
 
-
 # MIMIC Access
 
 MIMIC data can be found in PhysioNet, a repository of freely-available medical research data, managed by the MIT Laboratory for Computational Physiology. Due to its sensitive nature, credentialing is required to access both datasets.
 
 Documentation for MIMIC-IV's can be found here: https://mimic.mit.edu/
-
 
 # How to get data
 
@@ -41,7 +39,9 @@ After getting credentialing at PhysioNet, you must sign the data use agreement a
 Having all the necessary tables for the cohort generation query in your project, run the following command to fetch the data as a dataframe that will be saved as CSV in your local project. Make sure you have all required files and folders
 
 ```shell
-python3 src/2_cohorts/1_get_data.py --sql "src/1_sql/dataSelect.sql" --destination "data/MIMIC.csv"
+python3 src/2_cohorts/1_get_data.py --sql "src/1_sql/3_final_dataSelect.sql" --destination "data/MIMIC.csv"
 ```
-### 2. Run cohorting!
-```python3 src/2_cohorts/cohortselection.py```
+
+### 2. Create cohort
+
+``python3 src/2_cohorts/cohortselection.py``

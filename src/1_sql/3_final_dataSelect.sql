@@ -11,7 +11,7 @@ SELECT
   AS dx
   LEFT JOIN(
     SELECT icd9, icd10 AS icd_conv
-    FROM `glucosedatabyicu.my_MIMIC.icd9_to_10`
+    FROM `db_name.my_MIMIC.icd9_to_10`
   )
   AS conv
   ON conv.icd9 = dx.icd_code
@@ -361,7 +361,7 @@ LEFT JOIN (
       SELECT t1.*, t2.intime
       FROM (
         SELECT *
-        FROM `glucosedatabyicu.events.onlyGlucose`
+        FROM `db_name.events.onlyGlucose`
       ) t1
       JOIN `physionet-data.mimiciv_icu.icustays` t2 ON t1.stay_id = t2.stay_id
     )
@@ -382,7 +382,7 @@ FROM (
       stay_id,
       COUNT(*) AS total_glucose_measurements
     FROM
-      `glucosedatabyicu.events.onlyGlucose`
+      `db_name.events.onlyGlucose`
     GROUP BY
       stay_id
   ) a

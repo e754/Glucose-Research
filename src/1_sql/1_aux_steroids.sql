@@ -1,6 +1,6 @@
 
 
-CREATE OR REPLACE TABLE XXXXX.my_MIMIC.aux_steroids AS
+CREATE OR REPLACE TABLE `db_name.my_MIMIC.aux_steroids` AS
 
 WITH aux_steroid AS (
   SELECT
