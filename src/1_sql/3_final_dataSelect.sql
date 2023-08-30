@@ -361,7 +361,7 @@ LEFT JOIN (
       SELECT t1.*, t2.intime
       FROM (
         SELECT *
-        FROM `db_name.events.onlyGlucose`
+        FROM `db_name.my_MIMIC.onlyGlucose`
       ) t1
       JOIN `physionet-data.mimiciv_icu.icustays` t2 ON t1.stay_id = t2.stay_id
     )
@@ -382,7 +382,7 @@ FROM (
       stay_id,
       COUNT(*) AS total_glucose_measurements
     FROM
-      `db_name.events.onlyGlucose`
+      `db_name.my_MIMIC.onlyGlucose`
     GROUP BY
       stay_id
   ) a
