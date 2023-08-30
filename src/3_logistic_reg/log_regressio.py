@@ -26,6 +26,8 @@ fi=os.path.abspath('../../data/cohortedData.csv')
 print(fi)
 data = pd.read_csv(fi)
 
+#test comment 
+
 data['race_group'] = data['race_group'].replace('OTHER', 'Other')
 data=data[data['race_group']!='Other']
 blackweight=len(data[data['race_group']=='Black'])/len(data)
