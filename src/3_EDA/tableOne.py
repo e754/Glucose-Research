@@ -8,7 +8,9 @@ from tableone import TableOne, load_dataset
 
 current_path = os.path.abspath(".")
 label_encoder = LabelEncoder()
-fi = os.path.abspath("../../data/cohorted_data.csv")
+fi = os.path.abspath(
+    "/Users/Tristan/Documents/Projekte/Boston Celi/1 Glucose Likelihood/Glucose-Research/data/cohorted_data.csv"
+)
 print(fi)
 data = pd.read_csv(fi)
 
@@ -64,4 +66,5 @@ mytable = TableOne(
     limit=limit,
     pval=False,
 )
-mytable
+
+mytable.to_excel("results/1_table1/table1.xlsx")

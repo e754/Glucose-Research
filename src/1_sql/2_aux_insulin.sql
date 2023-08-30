@@ -1,4 +1,4 @@
-CREATE OR REPLACE TABLE `db_name.mergingFiltering.17_tobeused` AS (
+CREATE OR REPLACE TABLE `db_name.my_MIMIC.tobeused` AS (
  
   WITH onlyInsulin AS (
     SELECT *
@@ -28,7 +28,7 @@ CREATE OR REPLACE TABLE `db_name.mergingFiltering.17_tobeused` AS (
       d.*,
       a.total_insulin_amount
     FROM insulinAmount a
-    RIGHT JOIN `db_name.mergingFiltering.14_revisedtotalgluc` d
+    RIGHT JOIN `db_name.my_MIMIC.revisedtotalgluc` d
     ON d.stay_id = a.stay_id
   ) a
   LEFT JOIN insulinWeight b

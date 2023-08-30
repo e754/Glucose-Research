@@ -8,11 +8,11 @@ Documentation for MIMIC-IV's can be found here: https://mimic.mit.edu/
 
 # How to get data
 
-### 1. Get the Data!
+### 1. Get Access to the Data!
 
-Both MIMIC and eICU data can be found in [PhysioNet](https://physionet.org/), a repository of freely-available medical research data, managed by the MIT Laboratory for Computational Physiology. Due to its sensitive nature, credentialing is required to access both datasets.
+MIMIC data can be found in [PhysioNet](https://physionet.org/), a repository of freely-available medical research data, managed by the MIT Laboratory for Computational Physiology. Due to its sensitive nature, credentialing is required to access the dataset.
 
-Documentation for MIMIC-IV's can be found [here](https://mimic.mit.edu/) and for eICU [here](https://eicu-crd.mit.edu/).
+Documentation for MIMIC-IV's can be found [here](https://mimic.mit.edu/).
 
 #### Integration with Google Cloud Platform (GCP)
 
@@ -32,9 +32,11 @@ KEYS_FILE = "../GoogleCloud_keys.json"
 PROJECT_ID = "project-id"
 ```
 
-#### MIMIC-IV
+### 2. Run auxillary queries
 
-After getting credentialing at PhysioNet, you must sign the data use agreement and connect the database with GCP, either asking for permission or uploading the data to your project. Please note that only MIMIC v2.0 is available at GCP.
+Make sure you first upload the ICD-9 to ICD-10 mapping table "0_icd9_to_10.csv" to your BigQuery project "project-id.my_MIMIC.icd9_to_10" and then run all auxillary queries in ascending order before proceeding. 
+
+### 3. Download MIMIC-IV Data to your Machine
 
 Having all the necessary tables for the cohort generation query in your project, run the following command to fetch the data as a dataframe that will be saved as CSV in your local project. Make sure you have all required files and folders
 
@@ -42,6 +44,6 @@ Having all the necessary tables for the cohort generation query in your project,
 python3 src/2_cohorts/1_get_data.py --sql "src/1_sql/3_final_dataSelect.sql" --destination "data/MIMIC.csv"
 ```
 
-### 2. Create cohort
+### 4. Create cohort
 
 ``python3 src/2_cohorts/2_cohort_selection.py``
