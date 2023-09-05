@@ -41,7 +41,7 @@ Make sure you first upload the ICD-9 to ICD-10 mapping table "0_icd9_to_10.csv" 
 Having all the necessary tables for the cohort generation query in your project, run the following command to fetch the data as a dataframe that will be saved as CSV in your local project. Make sure you have all required files and folders
 
 ```shell
-python3 src/2_cohorts/1_get_data.py --sql "src/1_sql/3_final_dataSelect.sql" --destination "data/MIMIC.csv"
+python3 src/2_cohorts/1_get_data.py --sql "src/1_sql/4_final_dataSelect.sql" --destination "data/MIMIC.csv"
 ```
 
 ### 4. Create cohort
