@@ -249,6 +249,7 @@ onlyInsulin AS (
   FROM `physionet-data.mimiciv_icu.inputevents`
   WHERE itemid IN (229299, 229619, 223257, 223258, 223259, 223260, 223261, 223262)
 ),
+
 comb as (
 SELECT 
   icuStay.*, 
@@ -259,7 +260,11 @@ SELECT
   patients.gender, patients.anchor_year_group,
   sep.sepsis3,
   insu.hadInsulinDayOne,
-  measu.hadMeasurmentDayOne,
+  measu1.hadMeasurmentDayOne_chart,
+  measu2.hadMeasurmentDayOne_lab,
+  gluInclu1.total_glucose_measurements_chart,
+  gluInclu2.total_glucose_measurements_lab,
+  ed.measurment_before,
   so.SOFA,
   so.respiration,
   so.coagulation,
@@ -349,10 +354,11 @@ LEFT JOIN (
 ) as insu
 ON icuStay.stay_id = insu.stay_id 
 
+-- add information on glucose from chart
 LEFT JOIN (
   SELECT
   stay_id,
-  IF(SUM(CASE WHEN daysinceStart = 1 THEN 1 ELSE 0 END) > 0, TRUE, FALSE) AS hadMeasurmentDayOne
+  IF(SUM(CASE WHEN daysinceStart = 1 THEN 1 ELSE 0 END) > 0, TRUE, FALSE) AS hadMeasurmentDayOne_chart
   
   FROM (
     SELECT *,
@@ -361,39 +367,140 @@ LEFT JOIN (
       SELECT t1.*, t2.intime
       FROM (
         SELECT *
-        FROM `db_name.my_MIMIC.onlyGlucose`
+        FROM `db_name.my_MIMIC.onlyGlucose_chart`
       ) t1
       JOIN `physionet-data.mimiciv_icu.icustays` t2 ON t1.stay_id = t2.stay_id
     )
   )
   GROUP BY stay_id
-) as measu
-ON icuStay.stay_id = measu.stay_id
-),
-gluInclu as (SELECT
-  a.*,
-  IFNULL(CAST(total_glucose_measurements AS FLOAT64) / los, NULL) AS totalgluc_perLOS
+) as measu1
+ON icuStay.stay_id = measu1.stay_id
+
+-- add information on glucose from lab
+LEFT JOIN (
+  SELECT
+  stay_id,
+  IF(SUM(CASE WHEN daysinceStart = 1 THEN 1 ELSE 0 END) > 0, TRUE, FALSE) AS hadMeasurmentDayOne_lab
+  
+  FROM (
+    SELECT *,
+    TIMESTAMP_DIFF(CAST(charttime AS TIMESTAMP), CAST(intime AS TIMESTAMP), DAY) AS daysinceStart
+    FROM (
+      SELECT t1.*, t2.intime
+      FROM (
+        SELECT *
+        FROM `db_name.my_MIMIC.onlyGlucose_chart`
+      ) t1
+      JOIN `physionet-data.mimiciv_icu.icustays` t2 ON t1.stay_id = t2.stay_id
+    )
+  )
+  GROUP BY stay_id
+) as measu2
+ON icuStay.stay_id = measu2.stay_id
+
+LEFT JOIN (
+  SELECT lab.hadm_id,
+  CASE WHEN lab.hadm_id IS NOT NULL THEN TRUE 
+  ELSE FALSE 
+  END AS measurment_before,
+  FROM `physionet-data.mimiciv_hosp.labevents` AS lab
+
+  LEFT JOIN `physionet-data.mimiciv_derived.icustay_detail` AS icu
+    ON lab.hadm_id = icu.hadm_id
+  LEFT JOIN `physionet-data.mimiciv_ed.edstays` AS ed_mod
+    ON lab.hadm_id = ed_mod.hadm_id
+
+  WHERE lab.itemid IN (50809, 52027, 50931, 52569) -- Glucose itemid's
+  AND lab.charttime < icu.icu_intime -- ensure measurement is before ICU admission
+  AND lab.charttime BETWEEN ed_mod.intime AND ed_mod.outtime -- ensure measurement is within ED stay
+
+  GROUP BY lab.hadm_id
+) as ed
+ON icuStay.hadm_id = ed.hadm_id
+
+-- frequency of glucose measurements from charts
+LEFT JOIN (
+    SELECT
+      stay_id,
+      COUNT(*) AS total_glucose_measurements_chart
+    FROM
+      `db_name.my_MIMIC.onlyGlucose_chart`
+    GROUP BY
+      stay_id
+) AS gluInclu1
+ON icuStay.stay_id = gluInclu1.stay_id
+
+-- frequency of glucose measurements from labs
+LEFT JOIN (
+    SELECT
+      stay_id,
+      COUNT(*) AS total_glucose_measurements_lab
+    FROM
+      `db_name.my_MIMIC.onlyGlucose_lab`
+    GROUP BY
+      stay_id
+) AS gluInclu2
+ON icuStay.stay_id = gluInclu2.stay_id
+
+-- end of comb bracket
+)
+
+/*
+-- frequency of glucose measurements from charts
+,
+gluInclu1 as (SELECT
+  a_chart.*,
+  IFNULL(CAST(total_glucose_measurements_chart AS FLOAT64) / los, NULL) AS totalgluc_perLOS_chart
 FROM (
    SELECT
     d.*,
-    a.total_glucose_measurements
+    a_chart.total_glucose_measurements_chart
   FROM (
     SELECT
       stay_id,
-      COUNT(*) AS total_glucose_measurements
+      COUNT(*) AS total_glucose_measurements_chart
     FROM
-      `db_name.my_MIMIC.onlyGlucose`
+      `db_name.my_MIMIC.onlyGlucose_chart`
     GROUP BY
       stay_id
-  ) a
+  ) AS a_chart
    JOIN
      comb d
   ON
-    d.stay_id = a.stay_id
-) a
+    d.stay_id = a_chart.stay_id
+) AS a_chart
 ORDER BY
-  a.subject_id
-),
+  a_chart.subject_id
+)
+
+-- frequency of glucose measurements from lab
+,
+gluInclu2 as (SELECT
+  a_lab.*,
+  IFNULL(CAST(total_glucose_measurements_lab AS FLOAT64) / los, NULL) AS totalgluc_perLOS_lab
+FROM (
+   SELECT
+    d.*,
+    a_lab.total_glucose_measurements_lab
+  FROM (
+    SELECT
+      stay_id,
+      COUNT(*) AS total_glucose_measurements_lab
+    FROM
+      `db_name.my_MIMIC.onlyGlucose_lab`
+    GROUP BY
+      stay_id
+  ) a_lab
+   JOIN
+     comb d
+  ON
+    d.stay_id = a_lab.stay_id
+) a_lab
+ORDER BY
+  a_lab.subject_id
+)
+*/
+,
 insulinAmount AS (
   SELECT
     stay_id,
