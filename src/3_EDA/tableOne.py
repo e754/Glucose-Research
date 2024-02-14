@@ -13,7 +13,6 @@ fi = os.path.abspath(
 )
 print(fi)
 data = pd.read_csv(fi)
-
 columns = [
     "gender",
     "age",
@@ -25,17 +24,21 @@ columns = [
     "SOFA",
     "race_group",
     "hadInsulinDayOne",
-    "hadMeasurmentDayOne",
     "cad_present",
     "heart_failure_present",
     "hypertension_present",
     "totalinsulin_perLOS",
     "english_Proficent",
     "methylprednisolone_equivalent_normalized_by_icu_los",
+    "hadMeasurmentDayOne_chart",
+    "hadMeasurmentDayOne_lab",
+    "measurment_before",
 ]
 cat = [
     "hadInsulinDayOne",
-    "hadMeasurmentDayOne",
+    "hadMeasurmentDayOne_chart",
+    "hadMeasurmentDayOne_lab",
+    "measurment_before",
     "gender",
     "language",
     "admElective",
@@ -51,7 +54,8 @@ limit = {
     "gender": 1,
     "language": 1,
     "admElective": 1,
-    "hadMeasurmentDayOne": 1,
+    "hadMeasurmentDayOne_chart": 1,
+    "hadMeasurmentDayOne_lab":1,
     "english_Proficent": 1,
     "diabetes": 1,
 }
