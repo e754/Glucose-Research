@@ -1,0 +1,22 @@
+IRR,Lower_CI_exp,Upper_CI_exp,Variables
+1.447,1.272,1.645,Intercept
+0.958,0.919,0.997,insurance_Medicare[T.True]
+0.936,0.867,1.011,insurance_Medicaid[T.True]
+1.043,0.971,1.121,language[T.ENGLISH]
+1.01,0.906,1.126,race_group_Asian[T.True]
+0.993,0.937,1.052,race_group_Black[T.True]
+1.019,0.923,1.125,race_group_Hispanic[T.True]
+1.051,1.013,1.091,gender[T.M]
+1.363,1.251,1.486,admElective[T.True]
+1.202,1.156,1.25,hadInsulinDayOne[T.True]
+1.05,1.003,1.099,anchor_year_group[T.2011 - 2013]
+1.058,1.007,1.111,anchor_year_group[T.2014 - 2016]
+1.038,0.977,1.103,anchor_year_group[T.2017 - 2019]
+1.588,1.526,1.652,major_surgery
+1.0,0.999,1.001,methylprednisolone_equivalent_normalized_by_icu_los
+1.0,0.999,1.002,age
+1.042,1.036,1.047,SOFA
+0.98,0.972,0.988,charlson_comorbidity_index
+0.999,0.936,1.067,copd_present
+1.074,1.012,1.139,diabetes
+0.922,0.673,1.263,asthma_present
