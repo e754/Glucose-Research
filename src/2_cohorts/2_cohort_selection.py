@@ -121,7 +121,28 @@ df["temperature_mean"] = df["temperature_mean"].apply(
     lambda x: 36.5 if x == 0 or pd.isna(x) else x
 )
 
-# fill in NA
+# Change TRUE to 1
+# correct typo
+df["measurement_before"] = df["measurment_before"].replace(True, 1)
+
+# Fill in NaN in measurement_before with 0
+df["measurement_before"].fillna(0, inplace=True)
+
+# normalize measurement by LOS
+df["total_gluc_measr_per_los_bg"] = df["total_glucose_measurements_lab"] / df["los"]
+
+df["total_gluc_measr_per_los_chart"] = (
+    df["total_glucose_measurements_chart"] / df["los"]
+)
+
+# create rate beyond day 1 per reviewer's request
+df["measurement_rate_beyond_d1"] = np.where(
+    df["hadMeasurmentDayOne_chart"] == 1,
+    df["total_gluc_measr_per_los_bg"],
+    0,
+)
+
+df["measurement_beyond_d1"] = np.where(df["measurement_rate_beyond_d1"] > 0, 1, 0)
 
 # Save DataFrame to a CSV file
 df.to_csv("data/cohorted_data.csv", index=False)

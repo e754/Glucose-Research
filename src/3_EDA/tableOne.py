@@ -32,13 +32,16 @@ columns = [
     "methylprednisolone_equivalent_normalized_by_icu_los",
     "hadMeasurmentDayOne_chart",
     "hadMeasurmentDayOne_lab",
-    "measurment_before",
+    "measurement_before",
+    "measurement_rate_beyond_d1",
+    "measurement_beyond_d1",
 ]
 cat = [
     "hadInsulinDayOne",
     "hadMeasurmentDayOne_chart",
     "hadMeasurmentDayOne_lab",
-    "measurment_before",
+    "measurement_before",
+    "measurement_beyond_d1",
     "gender",
     "language",
     "admElective",
@@ -55,12 +58,19 @@ limit = {
     "language": 1,
     "admElective": 1,
     "hadMeasurmentDayOne_chart": 1,
-    "hadMeasurmentDayOne_lab":1,
+    "hadMeasurmentDayOne_lab": 1,
+    "measurement_beyond_d1": 1,
     "english_Proficent": 1,
     "diabetes": 1,
 }
 groupby = ["race_group"]
-nonnormal = ["charlson_comorbidity_index", "SOFA", "los", "totalinsulin_perLOS"]
+nonnormal = [
+    "charlson_comorbidity_index",
+    "SOFA",
+    "los",
+    "totalinsulin_perLOS",
+    "measurement_rate_beyond_d1",
+]
 mytable = TableOne(
     data,
     columns=columns,
