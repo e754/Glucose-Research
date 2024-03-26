@@ -1,20 +1,12 @@
 # Glucose-Research
 
-# MIMIC Access
-
-MIMIC data can be found in PhysioNet, a repository of freely-available medical research data, managed by the MIT Laboratory for Computational Physiology. Due to its sensitive nature, credentialing is required to access both datasets.
-
-Documentation for MIMIC-IV's can be found here: https://mimic.mit.edu/
-
-# How to get data
-
 ### 1. Get Access to the Data!
 
 MIMIC data can be found in [PhysioNet](https://physionet.org/), a repository of freely-available medical research data, managed by the MIT Laboratory for Computational Physiology. Due to its sensitive nature, credentialing is required to access the dataset.
 
-Documentation for MIMIC-IV's can be found [here](https://mimic.mit.edu/).
+Documentation for MIMIC-IV can be found [here](https://mimic.mit.edu/).
 
-#### Integration with Google Cloud Platform (GCP)
+#### A) Integration with Google Cloud Platform (GCP)
 
 In this section, we explain how to set up GCP and your environment in order to run SQL queries through GCP right from your local Python setting. Follow these steps:
 
@@ -31,19 +23,52 @@ Follow the format:
 KEYS_FILE = "../GoogleCloud_keys.json"
 PROJECT_ID = "project-id"
 ```
+7) Copy and paste all the relevant data tables from the physionet-data project to your own project:
+- Eg. `physionet-data.mimiciv_derived.icustay_detail` to `project-id.mimiciv_derived.icustay_detail`
+- The reason for this akward step is that access to physionet-data is limited to the BigQuery/Google Cloud Webbrowser, while API access is restricted
+- Alternatively one can run the SQL queries in the Google Cloud. However, one has to make sure all the table references are correctly changed.
+- Physionet-data tables accessed for this project: 
+- mimiciv_icu.icustays
+- mimiciv_icu.inputevents
+- mimiciv_icu.chartevents
+- mimiciv_hosp.admissions
+- mimiciv_hosp.emar
+- mimiciv_hosp.emar_detail
+- mimiciv_hosp.labevents
+- mimiciv_hosp.services
+- mimiciv_hosp.patients
+- mimiciv_hosp.diagnoses_icd
+- mimiciv_derived.age
+- mimiciv_derived.icustay_detail
+- mimiciv_derived.sepsis3
+- mimiciv_derived.first_day_sofa
+- mimiciv_derived.first_day_bg
+- mimiciv_derived.first_day_vitalsign
+- mimiciv_derived.charlson
+- mimiciv_ed.edstay
 
-### 2. Run auxillary queries
 
-Make sure you first upload the ICD-9 to ICD-10 mapping table "0_icd9_to_10.csv" to your BigQuery project "project-id.my_MIMIC.icd9_to_10" and then run all auxillary queries in ascending order before proceeding. 
+#### B) Direct download
 
-### 3. Download MIMIC-IV Data to your Machine
+Alternatively you can also download all the MIMIC-IV data from PhysioNet on your local machine. However, you will be responsible to create your own local SQL environment.
 
-Having all the necessary tables for the cohort generation query in your project, run the following command to fetch the data as a dataframe that will be saved as CSV in your local project. Make sure you have all required files and folders
+### 1. Install packages 
+
+Make sure you first install all the necessary python packages by runnig this code in your terminal:
 
 ```shell
-python3 src/2_cohorts/1_get_data.py --sql "src/1_sql/4_final_dataSelect.sql" --destination "data/MIMIC.csv"
+pip3 install -r setup/requirements_py.txt
 ```
 
-### 4. Create cohort
+### 2. Download MIMIC-IV Data to your Machine
+
+Make sure you first upload the ICD-9 to ICD-10 mapping table "0_icd9_to_10.csv" to your BigQuery project "project-id.my_MIMIC.icd9_to_10" and then run all auxillary queries in ascending order before proceeding.
+Having all the necessary tables for the cohort generation query in your project on BigQuery, run the following command to fetch the data as a dataframe that will be saved as CSV in your local project. Make sure you have all required files and folders
+
+```shell
+python3 src/2_cohorts/1_get_data.py
+```
+
+### 3. Create cohort
 
 ``python3 src/2_cohorts/2_cohort_selection.py``

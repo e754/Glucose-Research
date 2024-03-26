@@ -35,12 +35,12 @@ WITH aux_steroid AS (
   END AS methylprednisolone_equivalent
 
 
-  FROM `physionet-data.mimiciv_hosp.emar` emar 
+  FROM `db_name.mimiciv_hosp.emar` emar 
 
-  LEFT JOIN `physionet-data.mimiciv_hosp.emar_detail` AS detail
+  LEFT JOIN `db_name.mimiciv_hosp.emar_detail` AS detail
   ON emar.emar_id = detail.emar_id
 
-  LEFT JOIN `physionet-data.mimiciv_derived.icustay_detail` icu
+  LEFT JOIN `db_name.mimiciv_derived.icustay_detail` icu
   ON emar.hadm_id = icu.hadm_id 
 
 

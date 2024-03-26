@@ -1,0 +1,12 @@
+google-cloud-bigquery
+python-dotenv
+pyarrow
+numpy
+tqdm
+pandas
+pandas-gbq
+tableone
+joblib
+statsmodels
+scikit-learn
+imblearn

@@ -7,7 +7,7 @@ SELECT
        ELSE icd_code
       END AS icd_codes
   
-  FROM `physionet-data.mimiciv_hosp.diagnoses_icd`
+  FROM `db_name.mimiciv_hosp.diagnoses_icd`
   AS dx
   LEFT JOIN(
     SELECT icd9, icd10 AS icd_conv
@@ -28,9 +28,9 @@ surgflag as (
           first_careunit NOT LIKE "%MICU/SICU%"  THEN 1
           ELSE 0 END) AS surgical_icu
 
-  FROM `physionet-data.mimiciv_icu.icustays` ie
+  FROM `db_name.mimiciv_icu.icustays` ie
 
-  LEFT JOIN `physionet-data.mimiciv_hosp.services`se
+  LEFT JOIN `db_name.mimiciv_hosp.services`se
       ON ie.hadm_id = se.hadm_id
       AND se.transfertime < DATETIME_ADD(ie.intime, INTERVAL '2' DAY)
   GROUP BY ie.stay_id
@@ -153,7 +153,7 @@ SELECT DISTINCT
     ELSE NULL
   END AS connective_disease
 
-FROM `physionet-data.mimiciv_derived.icustay_detail` AS icu
+FROM `db_name.mimiciv_derived.icustay_detail` AS icu
 
 LEFT JOIN(
   SELECT hadm_id, STRING_AGG(icd_codes) AS icd_codes
@@ -194,7 +194,7 @@ LEFT JOIN(
       ELSE NULL
   END AS skin
 
-FROM `physionet-data.mimiciv_hosp.diagnoses_icd` 
+FROM `db_name.mimiciv_hosp.diagnoses_icd` 
 
 WHERE seq_num <= 3 -- only consider top 3 diagnoses for importance
 )
@@ -221,7 +221,7 @@ WHERE seq_num <= 3 -- only consider top 3 diagnoses for importance
       ELSE NULL
   END AS hospital_vap
 
-FROM `physionet-data.mimiciv_hosp.diagnoses_icd` 
+FROM `db_name.mimiciv_hosp.diagnoses_icd` 
 
 -- here we consider all possible diagnoses
 )
@@ -246,7 +246,7 @@ ON adm_dx.hadm_id = icu.hadm_id
 ),
 onlyInsulin AS (
   SELECT *
-  FROM `physionet-data.mimiciv_icu.inputevents`
+  FROM `db_name.mimiciv_icu.inputevents`
   WHERE itemid IN (229299, 229619, 223257, 223258, 223259, 223260, 223261, 223262)
 ),
 
@@ -304,24 +304,24 @@ SELECT
     else 'Other'
   END AS race_group
 
-FROM `physionet-data.mimiciv_icu.icustays` icuStay
+FROM `db_name.mimiciv_icu.icustays` icuStay
 
-LEFT JOIN `physionet-data.mimiciv_hosp.admissions` adm 
+LEFT JOIN `db_name.mimiciv_hosp.admissions` adm 
 ON icuStay.hadm_id = adm.hadm_id
 
-LEFT JOIN `physionet-data.mimiciv_derived.age` age 
+LEFT JOIN `db_name.mimiciv_derived.age` age 
 ON icuStay.hadm_id = age.hadm_id
 
-LEFT JOIN `physionet-data.mimiciv_hosp.patients` patients
+LEFT JOIN `db_name.mimiciv_hosp.patients` patients
 ON icuStay.subject_id = patients.subject_id
 
-LEFT JOIN `physionet-data.mimiciv_derived.sepsis3` sep
+LEFT JOIN `db_name.mimiciv_derived.sepsis3` sep
 ON icuStay.stay_id = sep.stay_id
 
-LEFT JOIN `physionet-data.mimiciv_derived.first_day_sofa` so
+LEFT JOIN `db_name.mimiciv_derived.first_day_sofa` so
 ON icuStay.stay_id = so.stay_id
 
-LEFT JOIN `physionet-data.mimiciv_derived.charlson` cc
+LEFT JOIN `db_name.mimiciv_derived.charlson` cc
 ON icuStay.hadm_id = cc.hadm_id
 
 LEFT JOIN piv piv
@@ -330,7 +330,7 @@ ON icuStay.hadm_id = piv.hadm_id
 LEFT JOIN surgflag surgflag
 ON surgflag.stay_id = icuStay.stay_id
 
-LEFT JOIN `physionet-data.my_MIMIC.aux_steroids` ster 
+LEFT JOIN `db_name.my_MIMIC.aux_steroids` ster 
 ON icuStay.hadm_id = ster.hadm_id
 
 LEFT JOIN (
@@ -347,7 +347,7 @@ LEFT JOIN (
         SELECT *
         FROM onlyInsulin
       ) t1
-      JOIN `physionet-data.mimiciv_icu.icustays` t2 ON t1.stay_id = t2.stay_id
+      JOIN `db_name.mimiciv_icu.icustays` t2 ON t1.stay_id = t2.stay_id
     )
   )
   GROUP BY stay_id
@@ -369,7 +369,7 @@ LEFT JOIN (
         SELECT *
         FROM `db_name.my_MIMIC.onlyGlucose_chart`
       ) t1
-      JOIN `physionet-data.mimiciv_icu.icustays` t2 ON t1.stay_id = t2.stay_id
+      JOIN `db_name.mimiciv_icu.icustays` t2 ON t1.stay_id = t2.stay_id
     )
   )
   GROUP BY stay_id
@@ -392,7 +392,7 @@ LEFT JOIN (
         FROM `db_name.my_MIMIC.onlyGlucose_bg`
         WHERE itemid IN (50809, 52027)
       ) t1
-      JOIN `physionet-data.mimiciv_icu.icustays` t2 ON t1.stay_id = t2.stay_id
+      JOIN `db_name.mimiciv_icu.icustays` t2 ON t1.stay_id = t2.stay_id
     )
   )
   GROUP BY stay_id
@@ -404,11 +404,11 @@ LEFT JOIN (
   CASE WHEN lab.hadm_id IS NOT NULL THEN TRUE 
   ELSE FALSE 
   END AS measurment_before,
-  FROM `physionet-data.mimiciv_hosp.labevents` AS lab
+  FROM `db_name.mimiciv_hosp.labevents` AS lab
 
-  LEFT JOIN `physionet-data.mimiciv_derived.icustay_detail` AS icu
+  LEFT JOIN `db_name.mimiciv_derived.icustay_detail` AS icu
     ON lab.hadm_id = icu.hadm_id
-  LEFT JOIN `physionet-data.mimiciv_ed.edstays` AS ed_mod
+  LEFT JOIN `db_name.mimiciv_ed.edstays` AS ed_mod
     ON lab.hadm_id = ed_mod.hadm_id
 
   WHERE lab.itemid IN (50809, 52027, 50931, 52569) -- Glucose itemid's
@@ -477,10 +477,10 @@ SELECT
 FROM
   comb d
 JOIN
-  `physionet-data.mimiciv_derived.first_day_bg` a1
+  `db_name.mimiciv_derived.first_day_bg` a1
 ON  d.stay_id = a1.stay_id
 JOIN
-  `physionet-data.mimiciv_derived.first_day_vitalsign` a2
+  `db_name.mimiciv_derived.first_day_vitalsign` a2
 ON  d.stay_id = a2.stay_id
 )
 SELECT
