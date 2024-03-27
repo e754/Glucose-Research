@@ -53,6 +53,10 @@ PROJECT_ID = "project-id"
 
 Alternatively you can also download all the MIMIC-IV data from PhysioNet on your local machine. However, you will be responsible to create your own local SQL environment.
 
+#### C) Run SQL queries manually in BigQuery's web based console
+
+Alternatively you can also run all SQL queries in BigQuery's web based console and then pull the resulting view as a .csv on your local machine.  However, one has to make sure all the table references are correctly changed (eg. `db_name.mimiciv_derived.icustay_detail` to `project-id.mimiciv_derived.icustay_detail` for tables that are being newly created, and `db_name.mimiciv_derived.icustay_detail` to `physionet-data.mimiciv_derived.icustay_detail` for tables that are being read).
+
 ### 2. Install packages
 
 Make sure you first install all the necessary python packages by runnig this code in your terminal:
