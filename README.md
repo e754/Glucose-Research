@@ -53,7 +53,7 @@ PROJECT_ID = "project-id"
 
 Alternatively you can also download all the MIMIC-IV data from PhysioNet on your local machine. However, you will be responsible to create your own local SQL environment.
 
-### 1. Install packages
+### 2. Install packages
 
 Make sure you first install all the necessary python packages by runnig this code in your terminal:
 
@@ -61,7 +61,7 @@ Make sure you first install all the necessary python packages by runnig this cod
 pip3 install -r setup/requirements_py.txt
 ```
 
-### 2. Download MIMIC-IV Data to your Machine and run Analysis in one step
+### 3. Download MIMIC-IV Data to your Machine and run Analysis in one step
 
 We tried it to make it simple for you by creating a batch file that runs all the relevant scripts sequentially.
 However make sure you have the ICD-9 to ICD-10 mapping table "0_icd9_to_10.csv" present in to your src/1_sql folder, as it will upload the csv file as a table to your BigQuery project "project-id.my_MIMIC.icd9_to_10".
@@ -71,6 +71,6 @@ Having **all the necessary tables** for the cohort generation query **in your pr
 python3 src/2_cohorts/0_batch_file.py
 ```
 
-### 3. Alternative: Run scripts sequentially
+### 4. Alternative: Run scripts sequentially
 
 Alternatively you can also run all the scripts in the src folder manually and sequentially which facilitates debugging.
