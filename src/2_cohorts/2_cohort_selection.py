@@ -1,7 +1,9 @@
 import os
-
 import numpy as np
 import pandas as pd
+import warnings
+
+warnings.filterwarnings("ignore")
 
 
 def get_demo(a):

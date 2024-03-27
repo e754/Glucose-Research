@@ -6,13 +6,15 @@ from sklearn.preprocessing import LabelEncoder
 #!pip install tableone
 from tableone import TableOne, load_dataset
 
-current_path = os.path.abspath(".")
-label_encoder = LabelEncoder()
-fi = os.path.abspath(
-    "/Users/Tristan/Documents/Projekte/Boston Celi/1 Glucose Likelihood/Glucose-Research/data/cohorted_data.csv"
-)
-print(fi)
-data = pd.read_csv(fi)
+# Get the absolute path of the directory of the script
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
+# Construct the relative path to the CSV file
+file_path = os.path.join(dir_path, "..", "..", "data", "cohorted_data.csv")
+
+# Now you can read the file with pandas
+data = pd.read_csv(file_path)
+
 columns = [
     "gender",
     "age",
